@@ -1,9 +1,52 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import React, { useEffect } from 'react';
+import Head from 'next/head';
+import Image from 'next/image';
+import useSWR from 'swr';
+import { gql } from '@apollo/client';
 
-const Home: NextPage = () => {
+import styles from '../styles/Home.module.css';
+import { GET_COMMENTS } from '../gql/queries';
+import { gqlFetcher } from '../utils/functions';
+import { client } from '../gql/client';
+
+export const getStaticProps = async () => {
+  const { error, data } = await client.query({
+    query: gql`${GET_COMMENTS}`,
+  });
+
+  if (error) {
+    return {
+      props: {
+        comments: null,
+      },
+    };
+  }
+
+  return {
+    props: {
+      comments: data.comments,
+    },
+    revalidate: 30,
+  };
+};
+
+const query = {
+  query: GET_COMMENTS,
+} as any;
+
+const getData = async (...args: any) => {
+  return await gqlFetcher(query);
+};
+
+interface IHome {
+  comments: any
+}
+
+const Home = ({ comments }: IHome) => {
+  const { data, error } = useSWR(query, getData);
+
+  useEffect(() => console.log('client', data, comments), [data]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -14,11 +57,14 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to
+          {' '}
+          <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing
+          {' '}
           <code className={styles.code}>pages/index.tsx</code>
         </p>
 
@@ -59,14 +105,15 @@ const Home: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by
+          {' '}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
