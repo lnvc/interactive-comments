@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { HASURA_ADMIN } from "../utils/constants";
+import { HASURA_ADMIN } from "../../utils/constants";
 
 export const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
