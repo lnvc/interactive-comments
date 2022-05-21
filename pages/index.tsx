@@ -52,9 +52,9 @@ const Home = ({ comments }: IHome) => {
   const [commentsState, setCommentsState] = useState<any[] | null>(comments);
   const isLoggedIn = useSelector((state: any) => state.user.token);
   const dispatch = useDispatch();
-  const { data, error } = useSWR(query, getData, {
-    errorRetryCount: 2
-  });
+  // const { data, error } = useSWR(query, getData, {
+  //   errorRetryCount: 2
+  // });
 
   const logoutUser = () => {
     signOut(auth)
@@ -70,16 +70,18 @@ const Home = ({ comments }: IHome) => {
   // on-demand revalidation
   const revalidate = async () => await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}`);
   useEffect(() => {
-    revalidate();
+    // call this from cf for security
+    // revalidate();
+
     console.log('isLoggedIn', isLoggedIn);
   }, []);
 
   // swr
-  useEffect(() => {
-    if (data) {
-      setCommentsState(data.comments);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setCommentsState(data.comments);
+  //   }
+  // }, [data]);
 
   return (
     <div className={styles.container}>
