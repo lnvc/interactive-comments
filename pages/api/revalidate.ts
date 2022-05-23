@@ -1,5 +1,7 @@
+// call from cf webhook
+
 export default async function revalidate(req: any, res: any) {
-  if (req.query.secret !== process.env.NEXT_PUBLIC_REVALIDATION_TOKEN) {
+  if (!req.query.secret || req.query.secret !== process.env.NEXT_PUBLIC_REVALIDATION_TOKEN) {
     return res.status(401).json({ message: 'invalid token' });
   }
 

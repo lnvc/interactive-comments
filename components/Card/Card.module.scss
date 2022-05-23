@@ -1,0 +1,79 @@
+@import "../../styles/variables.scss";
+
+.container {
+  background: $white;
+  color: $grayishBlue;
+  border-radius: 80px solid black;
+  padding: 1rem;
+}
+
+.userInfo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  .username {
+    color: $darkBlue;
+    font-weight: 700;
+  }
+  span {
+    display: flex inline-block;
+    align-items: center;
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+}
+
+.scoreContainer {
+  background: $veryLightGray;
+  width: fit-content;
+  border-radius: 5px;
+  .score {
+    display: inline-block;
+    color: $moderateBlue;
+    font-weight: 500;
+  }
+}
+
+.icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.reply {
+  display: flex;
+  width: max-content;
+  color: $moderateBlue;
+  font-weight: 500;
+}
+
+.reply span {
+  padding-left: 0.5rem;
+}
+
+// mobile
+@media only screen and (max-width: 400px) {
+  .container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .scoreContainer {
+    display: flex;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 10px;
+    padding-right: 10px;
+    .score {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  .mobileLayout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
