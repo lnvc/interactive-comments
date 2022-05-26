@@ -1,0 +1,67 @@
+@use "../../styles/_card.scss";
+
+@import '../../styles/variables.scss';
+
+.grid {
+  display: flex;
+  column-gap: 1rem;
+}
+
+.text {
+  resize: none;
+  border: 1px solid $lightGray;
+  border-radius: 5px;
+  height: 4rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+.text:focus {
+  caret-color: $moderateBlue;
+  outline: none;
+  border: 1px solid $moderateBlue;
+}
+
+.submit input {
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 700;
+  background: $moderateBlue;
+  color: $white;
+  padding-left: 1.3rem;
+  padding-right: 1.3rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  border: 0;
+  border-radius: 8px;
+}
+
+.submit input:active {
+  background: $lightGrayishBlue;
+}
+
+// mobile
+@media only screen and (max-width: $m) {
+  .image {
+    grid-area: image;
+    display: flex;
+    align-items: center;
+  }
+  .text {
+    grid-area: text;
+    width: auto;
+  }
+  .submit {
+    grid-area: submit;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .grid {
+    display: grid;
+    grid-template-areas:
+      "text text"
+      "image submit";
+    gap: 1rem;
+  }
+}

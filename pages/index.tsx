@@ -16,6 +16,7 @@ import { client } from '../libs/gql/client';
 import { useDispatch } from 'react-redux';
 import Card from '../components/Card';
 import Layout from '../components/Layout';
+import ReplyCard from '../components/ReplyCard';
 
 export const getStaticProps = async () => {
   const { error, data } = await client.query({
@@ -101,6 +102,7 @@ const Home = ({ comments }: IHome) => {
             <Card key={comment.id} comment={comment} />
           ))
         }
+        <ReplyCard />
       </main>
     </Layout>
   );
