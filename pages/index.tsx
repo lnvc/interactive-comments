@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { gql } from '@apollo/client';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 
 import styles from '../styles/Home.module.scss';
 
@@ -53,7 +53,8 @@ interface IHome {
 
 const Home = ({ comments }: IHome) => {
   const [commentsState, setCommentsState] = useState<any[] | null>(comments);
-  const isLoggedIn = useSelector((state: any) => state.user.token);
+  const loggedInUser = useSelector((state: any) => state.user.uid);
+  const username = useSelector((state: any) => state.user.username);
   const dispatch = useDispatch();
   const { data, error } = useSWR(query, getData, {
     errorRetryCount: 2
@@ -69,12 +70,6 @@ const Home = ({ comments }: IHome) => {
         console.error(err);
       });
   };
-
-  // useEffect(() => {
-  //   if (comments) {
-  //     setCommentsState([...comments]);
-  //   }
-  // }, [comments]);
 
   // swr
   useEffect(() => {
@@ -92,8 +87,12 @@ const Home = ({ comments }: IHome) => {
       </Head>
 
       {
-        isLoggedIn
-        ? <button onClick={logoutUser}>Logout</button>
+        loggedInUser ? (
+          <>
+            <span>Hi <Link href="/profile"><a>{username }</a></Link></span>
+            <button onClick={logoutUser}>Logout</button>
+          </>
+        )
         : <Link href='/login'><a>Login</a></Link>
       }
       <main className={styles.main}>
