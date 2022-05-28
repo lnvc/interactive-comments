@@ -1,42 +1,41 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
-import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, createHttpLink, InMemoryCache, split } from "@apollo/client";
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from "@apollo/client/utilities";
+import { createClient } from 'graphql-ws';
 
-import { HASURA_ADMIN, HASURA_USER } from "../../utils/constants";
-
-const initHeaders = {
-  "content-type": "application/json",
-  "x-hasura-admin-secret": process.env.NEXT_PUBLIC_HASURA_SECRET as string,
-  "x-hasura-role": HASURA_ADMIN,
-};
+import { HEADERS } from "../../utils/constants";
 
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
+  headers: HEADERS,
 });
 
-const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  if (typeof window !== 'undefined') {
-    const user = localStorage.getItem('user');
-    console.log('storage', user);
-    if (user) {
-      return {
-        headers: {
-          ...initHeaders,
-          "x-hasura-role": HASURA_USER,
-          "x-hasura-user-id": user,
-        }
-      }
-    }
-  }
-  // return the headers to the context so httpLink can read them
-  return {
-    headers: {
-      ...initHeaders,
-    }
-  }
-});
+const wsLink = process.title === 'browser' ? new GraphQLWsLink(createClient({
+  url: `ws://${process.env.NEXT_PUBLIC_HASURA_URL}`,
+  connectionParams: {
+    headers: HEADERS,
+  },
+})) : null;
+
+// The split function takes three parameters:
+//
+// * A function that's called for each operation to execute
+// * The Link to use for an operation if the function returns a "truthy" value
+// * The Link to use for an operation if the function returns a "falsy" value
+const splitLink = process.title === 'browser' && wsLink ? split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+) : httpLink;
+
 
 export const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: splitLink,
   cache: new InMemoryCache(),
 });

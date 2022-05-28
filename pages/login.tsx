@@ -19,8 +19,7 @@ const Login = () => {
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // The signed-in user info.
         const userId = result.user.uid;
-        const user = await getUser({ variables: { name: userId } });
-        console.log(user);
+        const user = await getUser();
         const username = await user.data?.users[0]?.username;
         const id = await user.data?.users[0]?.id;
         if (user && username && id) {

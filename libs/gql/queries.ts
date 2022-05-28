@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_COMMENTS = `
 query GetComments {
-  comments {
+  comments(order_by: {id: asc}) {
     content
     created_at
     downvotes
@@ -25,11 +25,13 @@ query GetComments {
 
 export const GET_USER = gql`
 query GetUser($name: String) {
-  users(limit: 1, where: {name: {_eq: $name}}) {
+  users {
     username
     name
     id
     last_seen
+    created_at
+    updated_at
   }
 }
 `;

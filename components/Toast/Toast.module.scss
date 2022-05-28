@@ -1,0 +1,28 @@
+@import "../../styles/variables.scss";
+
+@keyframes toast {
+  0% { right: 0; }
+  25% { right: 50px; }
+  30% { right: 40px; }
+  40% { right: 30px; }
+  50% { right: 20px; }
+  60% { right: 10px; }
+  70% { right: 5px; }
+  80% { right: 3px; }
+  90% { right: 1px; }
+  100% { right: 0; }
+}
+
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: $white;
+  animation-name: toast;
+  animation-duration: 0.7s;
+  margin: 1rem;
+  padding: 1rem;
+  border: $darkBlue solid 1px;
+  border-radius: 5px;
+  cursor: pointer;
+}

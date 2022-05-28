@@ -5,6 +5,8 @@ import { gql, useMutation } from '@apollo/client';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 
 // import styles from '../styles/Profile.module.scss';
 
@@ -12,7 +14,8 @@ import { GET_COMMENTS } from '../libs/gql/queries';
 import { UPDATE_USER } from '../libs/gql/mutations';
 import { gqlFetcher } from '../utils/functions';
 import { client } from '../libs/gql/client';
-import { useRouter } from 'next/router';
+import { HEADERS, USER_HEADER } from '../utils/constants';
+import { setUsername as setUsernameRedux } from '../libs/redux/features/user/userSlice';
 
 
 export const getStaticProps = async () => {
@@ -53,7 +56,9 @@ const Profile = () => {
   const [message, setMessage] = useState<string>('');
 
   const router = useRouter();
+  const dispatch = useDispatch();
   const loggedInUser = useSelector((state: any) => state.user.uid);
+  const id = useSelector((state: any) => state.user.id);
   const [updateUsername, { data, loading, error }] = useMutation(UPDATE_USER);
 
 
@@ -63,12 +68,22 @@ const Profile = () => {
 
   const handleSubmit = () => {
     if (username.length && loggedInUser) {
-      updateUsername({ variables: { name: loggedInUser, username } });
+      updateUsername({
+        variables: {
+          username
+        },
+        context: {
+          headers: {
+            ...HEADERS,
+            ...USER_HEADER,
+            "x-hasura-user-id": id.toString(),
+          },
+        },
+      });
     }
   };
 
   useEffect(() => {
-    console.log(data, loading, error);
     if (error) {
       setMessage('error. please try again.');
     }
@@ -76,6 +91,7 @@ const Profile = () => {
       setMessage('loading...');
     }
     if (data) {
+      dispatch(setUsernameRedux(data?.update_users?.returning[0]?.username));
       router.push('/');
     }
   }, [data, loading, error]);

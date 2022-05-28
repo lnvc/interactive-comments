@@ -26,7 +26,7 @@ const Card = ({ comment }: ICard) => {
             {/* user info */}
             <div className={styles.userInfo}>
               <Image src="/avatars/image-amyrobson.png" height={30} width={30} />
-              <span className={styles.username}>{comment.user.name}</span>
+              <span className={styles.username}>{comment.user.username}</span>
               {id && id === comment.user.id && <span className={styles.you}>you</span>}
               <span>1 month ago</span>
             </div>

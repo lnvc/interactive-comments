@@ -11,6 +11,7 @@ import '../styles/globals.css';
 import {store, persistor} from '../libs/redux/store';
 import { client } from '../libs/gql/client';
 import { HASURA_ADMIN, HASURA_USER } from '../utils/constants';
+import Toast from '../components/Toast';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   // const initHeaders = {
@@ -54,6 +55,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <PersistGate loading={null} persistor={persistor}>
         <ApolloProvider client={client}>
           <Component {...pageProps} />
+          <Toast message='toast' isVisible type='error' />
         </ApolloProvider>
       </PersistGate>
     </Provider>

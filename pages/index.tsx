@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import useSWR from 'swr';
-import { gql } from '@apollo/client';
+import { gql, useSubscription } from '@apollo/client';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { signOut } from 'firebase/auth';
@@ -17,6 +17,9 @@ import { useDispatch } from 'react-redux';
 import Card from '../components/Card';
 import Layout from '../components/Layout';
 import ReplyCard from '../components/ReplyCard';
+import { useRouter } from 'next/router';
+import { COMMENTS_SUBSCRIPTION } from '../libs/gql/subscriptions';
+import { HEADERS } from '../utils/constants';
 
 export const getStaticProps = async () => {
   const { error, data } = await client.query({
@@ -56,22 +59,29 @@ const Home = ({ comments }: IHome) => {
   const loggedInUser = useSelector((state: any) => state.user.uid);
   const username = useSelector((state: any) => state.user.username);
   const dispatch = useDispatch();
-  const { data, error } = useSWR(query, getData, {
-    errorRetryCount: 2
-  });
+  const router = useRouter();
+
+  // swr
+  // const { data, error } = useSWR(query, getData, {
+  //   errorRetryCount: 2,
+  //   refreshInterval: 10000,
+  // });
+
+  // subscription
+  const { data, loading, error } = useSubscription(COMMENTS_SUBSCRIPTION);
 
   const logoutUser = () => {
     signOut(auth)
       .then(() => {
         dispatch(logout());
-        window.location.pathname = '/';
+        router.push('/');
       })
       .catch(err => {
         console.error(err);
       });
   };
 
-  // swr
+  // swr or subscription
   useEffect(() => {
     if (data) {
       setCommentsState([...data.comments]);
@@ -89,7 +99,7 @@ const Home = ({ comments }: IHome) => {
       {
         loggedInUser ? (
           <>
-            <span>Hi <Link href="/profile"><a>{username }</a></Link></span>
+            <span>Hi <Link href="/profile"><a>{username}</a></Link></span>
             <button onClick={logoutUser}>Logout</button>
           </>
         )
