@@ -55,3 +55,22 @@ mutation UpdateComment($id: Int!, $content: String) {
   }
 }
 `;
+
+export const VOTE = gql`
+mutation Vote($id: Int!, $upvotes: Int!, $downvotes: Int!) {
+  update_comments_by_pk(pk_columns: {id: $id}, _set: {upvotes: $upvotes, downvotes: $downvotes}) {
+    id
+    downvotes
+    upvotes
+    content
+    updated_at
+    reply_to_id
+    reply_to {
+      id
+      user_id
+    }
+    created_at
+    user_id
+  }
+}
+`;

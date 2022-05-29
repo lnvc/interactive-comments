@@ -12,3 +12,7 @@ export const HEADERS = {
 export const USER_HEADER = {
   "x-hasura-role": HASURA_USER,
 };
+
+export const VISITOR_HEADER = {
+  "x-hasura-role": HASURA_VISITOR,
+};

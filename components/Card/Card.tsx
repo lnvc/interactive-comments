@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 
 import styles from './Card.module.scss';
@@ -7,8 +7,8 @@ import { Comment } from '../../utils/interfaces';
 import { useIsElementActive } from '../../libs/hooks/UseIsElementActive';
 import { useSelector } from 'react-redux';
 import { useMutation } from '@apollo/client';
-import { DELETE_COMMENT, UPDATE_COMMENT } from '../../libs/gql/mutations';
-import { HEADERS, USER_HEADER } from '../../utils/constants';
+import { DELETE_COMMENT, UPDATE_COMMENT, VOTE } from '../../libs/gql/mutations';
+import { HEADERS, USER_HEADER, VISITOR_HEADER } from '../../utils/constants';
 import Modal from '../Modal';
 
 interface ICard {
@@ -28,11 +28,8 @@ const Card = ({ comment }: ICard) => {
   const isDeleteActive = useIsElementActive(comment.id, 'delete');
 
   const [deleteComment] = useMutation(DELETE_COMMENT);
-  const [updateComment, { data, loading, error }] = useMutation(UPDATE_COMMENT);
-
-  useEffect(() => {
-    console.log('update', data, loading, error);
-  }, [data, loading, error]);
+  const [updateComment] = useMutation(UPDATE_COMMENT);
+  const [vote] = useMutation(VOTE);
 
   const handleEdit = () => {
     setIsEdit(!isEdit);
@@ -83,6 +80,25 @@ const Card = ({ comment }: ICard) => {
     setIsEdit(false);
   };
 
+  const handleVote = (type: "plus" | "minus") => {
+    if (id !== comment.user.id) {
+      vote({
+        variables: {
+          id: comment.id,
+          upvotes: type === "plus" ? comment.upvotes + 1 : comment.upvotes,
+          downvotes: type === "minus" ? comment.downvotes + 1 : comment.downvotes,
+        },
+        context: {
+          headers: {
+            ...HEADERS,
+            ...VISITOR_HEADER,
+            "x-hasura-user-id": id,
+          },
+        },
+      });
+    }
+  };
+
   return (
     <div className={comment.reply_to ? styles.rootReply : styles.root}>
       {
@@ -125,13 +141,13 @@ const Card = ({ comment }: ICard) => {
 
             {/* score */}
             <div className={styles.scoreContainer}>
-              <div className={styles.icon}>
+              <div className={styles.icon} onClick={() => handleVote("plus")}>
                 <img src="/icon-plus.svg" />
               </div>
               <span className={styles.score}>
                 { comment.upvotes - comment.downvotes }
               </span>
-              <div className={styles.icon}>
+              <div className={styles.icon} onClick={() => handleVote("minus")}>
                 <img src="/icon-minus.svg" />
               </div>
             </div>
