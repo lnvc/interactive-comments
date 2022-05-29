@@ -29,3 +29,11 @@ mutation InsertComment($content: String) {
   }
 }
 `;
+
+export const DELETE_COMMENT = gql`
+mutation DeleteComment($id: Int!) {
+  delete_comments_by_pk(id: $id) {
+    id
+  }
+}
+`

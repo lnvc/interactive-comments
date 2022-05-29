@@ -1,14 +1,17 @@
 import React from 'react';
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 import { auth } from '../libs/firebase/config';
 import { login as login, setId, setUsername } from '../libs/redux/features/user/userSlice';
 import { useLazyQuery } from '@apollo/client';
 import { GET_USER } from '../libs/gql/queries';
+import { HEADERS, USER_HEADER } from '../utils/constants';
 
 const Login = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [getUser] = useLazyQuery(GET_USER);
 
   const loginUser = () => {
@@ -19,16 +22,18 @@ const Login = () => {
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // The signed-in user info.
         const userId = result.user.uid;
-        const user = await getUser();
-        const username = await user.data?.users[0]?.username;
-        const id = await user.data?.users[0]?.id;
+        const users = await getUser();
+        console.log('user', users);
+        const user = await users.data?.users?.find((item: any) => item.name === userId);
+        const username = await user?.username;
+        const id = await user?.id;
         if (user && username && id) {
           dispatch(login(userId));
           dispatch(setUsername(username));
           dispatch(setId(id));
         }
         if (process.title === 'browser') {
-          window.location.pathname = '/';
+          router.push('/');
         }
         // ...
       }).catch((error) => {
@@ -41,7 +46,7 @@ const Login = () => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
         if (process.title === 'browser') {
-          window.location.pathname = '/';
+          router.push('/');
         }
       });
   };
