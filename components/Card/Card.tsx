@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import styles from './Card.module.scss';
@@ -7,7 +7,7 @@ import { Comment } from '../../utils/interfaces';
 import { useIsElementActive } from '../../libs/hooks/UseIsElementActive';
 import { useSelector } from 'react-redux';
 import { useMutation } from '@apollo/client';
-import { DELETE_COMMENT } from '../../libs/gql/mutations';
+import { DELETE_COMMENT, UPDATE_COMMENT } from '../../libs/gql/mutations';
 import { HEADERS, USER_HEADER } from '../../utils/constants';
 import Modal from '../Modal';
 
@@ -28,9 +28,18 @@ const Card = ({ comment }: ICard) => {
   const isDeleteActive = useIsElementActive(comment.id, 'delete');
 
   const [deleteComment] = useMutation(DELETE_COMMENT);
+  const [updateComment, { data, loading, error }] = useMutation(UPDATE_COMMENT);
+
+  useEffect(() => {
+    console.log('update', data, loading, error);
+  }, [data, loading, error]);
 
   const handleEdit = () => {
     setIsEdit(!isEdit);
+  };
+
+  const handleChange = (e: any) => {
+    setContent(e.target.value);
   };
 
   const handleDeleteModal = () => {
@@ -55,6 +64,23 @@ const Card = ({ comment }: ICard) => {
       },
     });
     handleCancel();
+  };
+
+  const handleUpdate = () => {
+    updateComment({
+      variables: {
+        id: comment.id,
+        content,
+      },
+      context: {
+        headers: {
+          ...HEADERS,
+          ...USER_HEADER,
+          "x-hasura-user-id": id,
+        },
+      },
+    });
+    setIsEdit(false);
   };
 
   return (
@@ -84,7 +110,12 @@ const Card = ({ comment }: ICard) => {
             {/* comment */}
           {
             isEdit ? (
-              <textarea className={styles.input} name="input" id="input" value={comment.content} />
+              <div className={styles.inputContainer}>
+                <textarea className={styles.input} name="input" id="input" value={content} onChange={handleChange} />
+                <div className={styles.updateContainer}>
+                  <input type="submit" value="update" onClick={handleUpdate} />
+                </div>
+              </div>
             ) : (
               <p className={styles.comment}>
                 {comment.content}

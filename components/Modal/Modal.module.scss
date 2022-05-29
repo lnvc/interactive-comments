@@ -49,6 +49,12 @@
   grid-area: confirm;
   @include button($color: $softRed);
 }
+.cancel:active {
+  background: $lightGray;
+}
+.confirm:active {
+  background: $paleRed;
+}
 
 .modal {
   position: absolute;
