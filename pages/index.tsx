@@ -11,7 +11,7 @@ import styles from '../styles/Home.module.scss';
 import { logout } from '../libs/redux/features/user/userSlice';
 import { auth } from '../libs/firebase/config';
 import { GET_COMMENTS } from '../libs/gql/queries';
-import { gqlFetcher } from '../utils/functions';
+import { getCommentsAndReplies, gqlFetcher } from '../utils/functions';
 import { client } from '../libs/gql/client';
 import { useDispatch } from 'react-redux';
 import Card from '../components/Card';
@@ -22,12 +22,15 @@ import { COMMENTS_SUBSCRIPTION } from '../libs/gql/subscriptions';
 import { HEADERS } from '../utils/constants';
 
 export const getStaticProps = async () => {
-  const { error, data } = await client.query({
+  const { error: errorComments, data: dataComments } = await client.query({
     query: gql`${GET_COMMENTS}`,
     fetchPolicy: 'network-only',
   });
 
-  if (error) {
+  const comments = await getCommentsAndReplies(dataComments);
+  // console.log('sss', comments);
+
+  if (errorComments) {
     return {
       props: {
         comments: null,
@@ -37,7 +40,7 @@ export const getStaticProps = async () => {
 
   return {
     props: {
-      comments: data.comments,
+      comments,
     },
   };
 };
@@ -84,7 +87,11 @@ const Home = ({ comments }: IHome) => {
   // swr or subscription
   useEffect(() => {
     if (data) {
-      setCommentsState([...data.comments]);
+      const fetchComments = async () => {
+        const commentsAndReplies = await getCommentsAndReplies(data);
+        setCommentsState([...commentsAndReplies]);
+      };
+      fetchComments();
     }
   }, [data]);
 

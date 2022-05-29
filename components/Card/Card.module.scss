@@ -151,6 +151,17 @@
   border: 1px solid $moderateBlue;
 }
 
+.reply {
+  background: $white;
+  color: $grayishBlue;
+  border: 0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 // desktop
 @media only screen and (min-width: $m) {
   .grid {

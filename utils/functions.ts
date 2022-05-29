@@ -19,3 +19,14 @@ export const gqlFetcher = async (...args: any[]) => {
   }
   return resJson.data;
 };
+
+export const getCommentsAndReplies = async (dataComments: any) => {
+  const comments = [] as any;
+  for (let i = 0; i < dataComments.comments.length; i++) {
+    await comments.push(dataComments. comments[i]);
+    if (dataComments.comments[i].replies.length) {
+      await comments.splice(comments.length, 0, ...dataComments.comments[i].replies);
+    }
+  }
+  return comments;
+};

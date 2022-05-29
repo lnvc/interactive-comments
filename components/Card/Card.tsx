@@ -10,6 +10,7 @@ import { useMutation } from '@apollo/client';
 import { DELETE_COMMENT, UPDATE_COMMENT, VOTE } from '../../libs/gql/mutations';
 import { HEADERS, USER_HEADER, VISITOR_HEADER } from '../../utils/constants';
 import Modal from '../Modal';
+import ReplyCard from '../ReplyCard';
 
 interface ICard {
   comment: Comment
@@ -99,8 +100,16 @@ const Card = ({ comment }: ICard) => {
     }
   };
 
+  const handleMakeReply = () => {
+    setIsReply(!isReply);
+  };
+
+  const handleFinishReply = () => {
+    setIsReply(false);
+  };
+
   return (
-    <div className={comment.reply_to ? styles.rootReply : styles.root}>
+    <div className={comment.reply_to_id ? styles.rootReply : styles.root}>
       {
         isDelete &&
         <Modal
@@ -112,7 +121,7 @@ const Card = ({ comment }: ICard) => {
           handleDelete={handleDelete}
         />
       }
-      {comment.reply_to && <div className={styles.line}></div>}
+      {comment.reply_to_id && <div className={styles.line}></div>}
         <div className={styles.container}>
           <div className={styles.grid}>
             {/* user info */}
@@ -124,20 +133,20 @@ const Card = ({ comment }: ICard) => {
             </div>
 
             {/* comment */}
-          {
-            isEdit ? (
-              <div className={styles.inputContainer}>
-                <textarea className={styles.input} name="input" id="input" value={content} onChange={handleChange} />
-                <div className={styles.updateContainer}>
-                  <input type="submit" value="update" onClick={handleUpdate} />
+            {
+              isEdit ? (
+                <div className={styles.inputContainer}>
+                  <textarea className={styles.input} name="input" id="input" value={content} onChange={handleChange} />
+                  <div className={styles.updateContainer}>
+                    <input type="submit" value="update" onClick={handleUpdate} />
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <p className={styles.comment}>
-                {comment.content}
-              </p>
-            )
-          }
+              ) : (
+                <p className={styles.comment}>
+                  {comment.content}
+                </p>
+              )
+            }
 
             {/* score */}
             <div className={styles.scoreContainer}>
@@ -154,41 +163,57 @@ const Card = ({ comment }: ICard) => {
 
             {/* reply, edit, and delete buttons */}
             <div className={styles.buttons}>
-            {
-              userId ? (
-                  userId !== comment.user.name ? (
-                    <div
-                      className={styles.replyOrEdit}
-                      id={`reply ${comment.id.toString()}`}
-                    >
-                      <img src={isReplyActive ? "/icon-reply-active.svg" : "/icon-reply.svg"} />
-                      <span>Reply</span>
+              {
+                userId ? (
+                    userId !== comment.user.name ? (
+                      <div
+                        className={styles.replyOrEdit}
+                        id={`reply ${comment.id.toString()}`}
+                        onClick={handleMakeReply}
+                      >
+                        <img src={isReplyActive ? "/icon-reply-active.svg" : "/icon-reply.svg"} />
+                        <span>Reply</span>
+                      </div>
+                  ) : (
+                    <div className={styles.edit}>
+                      <div
+                        className={styles.delete}
+                        id={`delete ${comment.id.toString()}`}
+                        onClick={handleDeleteModal}
+                      >
+                        <img src={isDeleteActive ? "/icon-delete-active.svg" : "/icon-delete.svg"} />
+                        <span>Delete</span>
+                      </div>
+                      <div
+                        className={styles.replyOrEdit}
+                        id={`edit ${comment.id.toString()}`}
+                        onClick={handleEdit}
+                      >
+                        <img src={isEditActive ? "/icon-edit-active.svg" : "/icon-edit.svg"} />
+                        <span>Edit</span>
+                      </div>
                     </div>
-                ) : (
-                  <div className={styles.edit}>
-                    <div
-                      className={styles.delete}
-                      id={`delete ${comment.id.toString()}`}
-                      onClick={handleDeleteModal}
-                    >
-                      <img src={isDeleteActive ? "/icon-delete-active.svg" : "/icon-delete.svg"} />
-                      <span>Delete</span>
-                    </div>
-                    <div
-                      className={styles.replyOrEdit}
-                      id={`edit ${comment.id.toString()}`}
-                      onClick={handleEdit}
-                    >
-                      <img src={isEditActive ? "/icon-edit-active.svg" : "/icon-edit.svg"} />
-                      <span>Edit</span>
-                    </div>
-                  </div>
-                )
-              ) : null
-            }
+                  )
+                ) : null
+              }
             </div>
           </div>
-        </div>
+      </div>
+      {
+        isReply && (
+          <>
+            {comment.reply_to_id && <div className={styles.line}></div>}
+            <div className={styles.reply}>
+              <ReplyCard
+                isReply
+                handleFinishReply={handleFinishReply}
+                parentReplyId={comment.reply_to_id ? comment.reply_to_id : comment.id}
+                directReplyUsername={comment.user.username}
+              />
+            </div>
+          </>
+        )
+      }
     </div>
   );
 };

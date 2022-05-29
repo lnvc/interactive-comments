@@ -74,3 +74,12 @@ mutation Vote($id: Int!, $upvotes: Int!, $downvotes: Int!) {
   }
 }
 `;
+
+export const INSERT_REPLY = gql`
+mutation MyMutation5($reply_to_id: Int, $content: String!) {
+  insert_comments_one(object: {reply_to_id: $reply_to_id, content: $content}) {
+    id
+    content
+  }
+}
+`;
