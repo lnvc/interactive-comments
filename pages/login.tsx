@@ -23,7 +23,6 @@ const Login = () => {
         // The signed-in user info.
         const userId = result.user.uid;
         const users = await getUser();
-        console.log('user', users);
         const user = await users.data?.users?.find((item: any) => item.name === userId);
         const username = await user?.username;
         const id = await user?.id;

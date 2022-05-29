@@ -61,7 +61,6 @@ const ReplyCard = ({
           },
         },
       });
-      console.log('reply', parentReplyId);
       handleFinishReply();
     }
   };
