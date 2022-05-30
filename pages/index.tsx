@@ -96,6 +96,25 @@ const Home = ({ comments }: IHome) => {
     }
   }, [data]);
 
+  // difference between vue and react state
+  // const [reactState, setReactState] = useState<boolean>(true);
+  // useEffect(() => {
+  //   console.log('before calling setReactState: ', reactState);
+  //   setReactState(false);
+  //   console.log('after calling setReactState: ', reactState);
+  // }, []);
+
+  // useEffect with and without dependencies
+  // useEffect(() => console.log('without dependency array'));
+  // useEffect(() => console.log('with dependency array'), []);
+
+  // circular dependencies
+  // const [infinity, setInfinity] = useState<number>(0);
+  // useEffect(() => {
+  //   setInfinity(infinity + 1);
+  //   console.log('infinity', infinity);
+  // }, [infinity]);
+
   return (
     <Layout>
       <Head>
@@ -115,7 +134,7 @@ const Home = ({ comments }: IHome) => {
       }
       <main className={styles.main}>
         {
-          commentsState && commentsState.map((comment: Comment) => (
+          commentsState?.map((comment: Comment) => (
             <Card key={comment.id} comment={comment} />
           ))
         }

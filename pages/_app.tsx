@@ -55,7 +55,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <PersistGate loading={null} persistor={persistor}>
         <ApolloProvider client={client}>
           <Component {...pageProps} />
-          <Toast message='toast' isVisible type='error' />
+          {/* <Toast message='toast' isVisible type='error' /> */}
         </ApolloProvider>
       </PersistGate>
     </Provider>
