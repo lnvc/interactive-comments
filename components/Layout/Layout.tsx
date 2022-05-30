@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import styles from './Layout.module.scss';
 
 interface ILayout {
-  children: any,
+  children: ReactNode,
 }
 const Layout = ({ children }: ILayout) => {
   return (

@@ -20,6 +20,7 @@ import ReplyCard from '../components/ReplyCard';
 import { useRouter } from 'next/router';
 import { COMMENTS_SUBSCRIPTION } from '../libs/gql/subscriptions';
 import { HEADERS } from '../utils/constants';
+import { Comment } from '../utils/interfaces';
 
 export const getStaticProps = async () => {
   const { error: errorComments, data: dataComments } = await client.query({
@@ -114,7 +115,7 @@ const Home = ({ comments }: IHome) => {
       }
       <main className={styles.main}>
         {
-          commentsState && commentsState.map((comment: any) => (
+          commentsState && commentsState.map((comment: Comment) => (
             <Card key={comment.id} comment={comment} />
           ))
         }
