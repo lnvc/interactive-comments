@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from "react";
+import "../styles/globals.css";
+
 import { ApolloProvider } from "@apollo/client";
 import type { AppProps } from "next/app";
+import React from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-import "../styles/globals.css";
-
-import { store, persistor } from "../libs/redux/store";
 import { client } from "../libs/gql/client";
+import { persistor, store } from "../libs/redux/store";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
   // const initHeaders = {

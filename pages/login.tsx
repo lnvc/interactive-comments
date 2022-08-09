@@ -1,12 +1,12 @@
-import React from "react";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
-
 import { useLazyQuery } from "@apollo/client";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useRouter } from "next/router";
+import React from "react";
+import { useDispatch } from "react-redux";
+
 import { auth } from "../libs/firebase/config";
-import { login, setId, setUsername } from "../libs/redux/features/user/userSlice";
 import { GET_USER } from "../libs/gql/queries";
+import { login, setId, setUsername } from "../libs/redux/features/user/userSlice";
 
 const Login = () => {
   const dispatch = useDispatch();

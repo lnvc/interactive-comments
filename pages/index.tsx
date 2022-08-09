@@ -1,24 +1,23 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
-import Head from "next/head";
 // import useSWR from 'swr';
 import { gql, useSubscription } from "@apollo/client";
-import Link from "next/link";
-import { useSelector, useDispatch } from "react-redux";
 import { signOut } from "firebase/auth";
-
+import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import styles from "../styles/Home.module.scss";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { logout } from "../libs/redux/features/user/userSlice";
-import { auth } from "../libs/firebase/config";
-import { GET_COMMENTS } from "../libs/gql/queries";
-import { getCommentsAndReplies } from "../utils/functions";
-import { client } from "../libs/gql/client";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
 import ReplyCard from "../components/ReplyCard";
+import { auth } from "../libs/firebase/config";
+import { client } from "../libs/gql/client";
+import { GET_COMMENTS } from "../libs/gql/queries";
 import { COMMENTS_SUBSCRIPTION } from "../libs/gql/subscriptions";
+import { logout } from "../libs/redux/features/user/userSlice";
+import styles from "../styles/Home.module.scss";
+import { getCommentsAndReplies } from "../utils/functions";
 // import { HEADERS } from '../utils/constants';
 import { Comment } from "../utils/interfaces";
 

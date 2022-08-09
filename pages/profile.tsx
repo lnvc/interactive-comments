@@ -1,17 +1,16 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-// import styles from '../styles/Profile.module.scss';
-
-import { GET_COMMENTS } from "../libs/gql/queries";
-import { UPDATE_USER } from "../libs/gql/mutations";
 // import { gqlFetcher } from "../utils/functions";
 import { client } from "../libs/gql/client";
-import { HEADERS, USER_HEADER } from "../utils/constants";
+import { UPDATE_USER } from "../libs/gql/mutations";
+// import styles from '../styles/Profile.module.scss';
+import { GET_COMMENTS } from "../libs/gql/queries";
 import { setUsername as setUsernameRedux } from "../libs/redux/features/user/userSlice";
+import { HEADERS, USER_HEADER } from "../utils/constants";
 
 export const getStaticProps = async () => {
   const { error, data } = await client.query({

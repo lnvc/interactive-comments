@@ -1,13 +1,12 @@
 /* eslint-disable react/require-default-props */
-import React, { useState } from "react";
-import Image from "next/image";
 import { useMutation } from "@apollo/client";
-
+import Image from "next/image";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import styles from "./ReplyCard.module.scss";
 
 import { INSERT_COMMENT, INSERT_REPLY } from "../../libs/gql/mutations";
 import { HEADERS, USER_HEADER } from "../../utils/constants";
+import styles from "./ReplyCard.module.scss";
 
 interface IReplyCard {
   isReply?: boolean;

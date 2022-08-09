@@ -2,19 +2,18 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-nested-ternary */
-import React, { useState } from "react";
-import Image from "next/image";
-
-import { useSelector } from "react-redux";
 import { useMutation } from "@apollo/client";
-import styles from "./Card.module.scss";
+import Image from "next/image";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
-import { Comment } from "../../utils/interfaces";
-import { useIsElementActive } from "../../libs/hooks/UseIsElementActive";
 import { DELETE_COMMENT, UPDATE_COMMENT, VOTE } from "../../libs/gql/mutations";
+import { useIsElementActive } from "../../libs/hooks/UseIsElementActive";
 import { HEADERS, USER_HEADER, VISITOR_HEADER } from "../../utils/constants";
+import { Comment } from "../../utils/interfaces";
 import Modal from "../Modal";
 import ReplyCard from "../ReplyCard";
+import styles from "./Card.module.scss";
 
 interface ICard {
   comment: Comment;
