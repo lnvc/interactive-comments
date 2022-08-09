@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import useSWR from 'swr';
+// import useSWR from 'swr';
 import { gql, useSubscription } from '@apollo/client';
 import Link from 'next/link';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { signOut } from 'firebase/auth';
 
+import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.scss';
 
 import { logout } from '../libs/redux/features/user/userSlice';
@@ -13,13 +14,11 @@ import { auth } from '../libs/firebase/config';
 import { GET_COMMENTS } from '../libs/gql/queries';
 import { getCommentsAndReplies, gqlFetcher } from '../utils/functions';
 import { client } from '../libs/gql/client';
-import { useDispatch } from 'react-redux';
 import Card from '../components/Card';
 import Layout from '../components/Layout';
 import ReplyCard from '../components/ReplyCard';
-import { useRouter } from 'next/router';
 import { COMMENTS_SUBSCRIPTION } from '../libs/gql/subscriptions';
-import { HEADERS } from '../utils/constants';
+// import { HEADERS } from '../utils/constants';
 import { Comment } from '../utils/interfaces';
 
 export const getStaticProps = async () => {
@@ -46,13 +45,11 @@ export const getStaticProps = async () => {
   };
 };
 
-const query = {
-  query: GET_COMMENTS,
-} as any;
+// const query = {
+//   query: GET_COMMENTS,
+// } as any;
 
-const getData = async (...args: any) => {
-  return await gqlFetcher(query);
-};
+// const getData = async (...args: any) => await gqlFetcher(query);
 
 interface IHome {
   comments: any
@@ -72,7 +69,7 @@ const Home = ({ comments }: IHome) => {
   // });
 
   // subscription
-  const { data, loading, error } = useSubscription(COMMENTS_SUBSCRIPTION);
+  const { data } = useSubscription(COMMENTS_SUBSCRIPTION);
 
   const logoutUser = () => {
     signOut(auth)
@@ -80,7 +77,7 @@ const Home = ({ comments }: IHome) => {
         dispatch(logout());
         router.push('/');
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
   };
@@ -126,11 +123,15 @@ const Home = ({ comments }: IHome) => {
       {
         loggedInUser ? (
           <>
-            <span>Hi <Link href="/profile"><a>{username}</a></Link></span>
-            <button onClick={logoutUser}>Logout</button>
+            <span>
+              Hi
+              {' '}
+              <Link href="/profile"><a>{username}</a></Link>
+            </span>
+            <button type="button" onClick={logoutUser}>Logout</button>
           </>
         )
-        : <Link href='/login'><a>Login</a></Link>
+          : <Link href="/login"><a>Login</a></Link>
       }
       <main className={styles.main}>
         {
