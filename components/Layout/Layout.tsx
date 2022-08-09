@@ -1,16 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
-import styles from './Layout.module.scss';
+import styles from "./Layout.module.scss";
 
 interface ILayout {
-  children: ReactNode,
+  children: ReactNode;
 }
-const Layout = ({ children }: ILayout) => {
-  return (
-    <div className={styles.container}>
-      {children}
-    </div>
-  );
-};
+const Layout = ({ children }: ILayout) => <div className={styles.container}>{children}</div>;
 
 export default Layout;

@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { useMutation } from '@apollo/client';
+/* eslint-disable react/require-default-props */
+import React, { useState } from "react";
+import Image from "next/image";
+import { useMutation } from "@apollo/client";
 
-import styles from './ReplyCard.module.scss';
+import { useSelector } from "react-redux";
+import styles from "./ReplyCard.module.scss";
 
-import { INSERT_COMMENT, INSERT_REPLY } from '../../libs/gql/mutations';
-import { HEADERS, USER_HEADER } from '../../utils/constants';
-import { useSelector } from 'react-redux';
+import { INSERT_COMMENT, INSERT_REPLY } from "../../libs/gql/mutations";
+import { HEADERS, USER_HEADER } from "../../utils/constants";
 
 interface IReplyCard {
-  isReply?: boolean,
-  handleFinishReply?: () => void,
-  parentReplyId?: number,
-  directReplyUsername?: string,
+  isReply?: boolean;
+  handleFinishReply?: () => void;
+  parentReplyId?: number;
+  directReplyUsername?: string;
 }
 
-const ReplyCard = ({
-  isReply,
-  handleFinishReply,
-  parentReplyId,
-  directReplyUsername,
-}: IReplyCard) => {
-  const [content, setContent] = useState<string>(isReply && directReplyUsername ? `@${directReplyUsername} ` : '');
-  const [insertComment, { loading, error }] = useMutation(INSERT_COMMENT);
+const ReplyCard = ({ isReply, handleFinishReply, parentReplyId, directReplyUsername }: IReplyCard) => {
+  const [content, setContent] = useState<string>(isReply && directReplyUsername ? `@${directReplyUsername} ` : "");
+  const [insertComment] = useMutation(INSERT_COMMENT);
   const [insertReply] = useMutation(INSERT_REPLY);
   const id = useSelector((state: any) => state.user.id);
 
@@ -31,10 +27,10 @@ const ReplyCard = ({
   };
 
   const handleSubmit = () => {
-    setContent('');
+    setContent("");
     insertComment({
       variables: {
-        content
+        content,
       },
       context: {
         headers: {
@@ -43,7 +39,7 @@ const ReplyCard = ({
           "x-hasura-user-id": id.toString(),
         },
       },
-    })
+    });
   };
 
   const handleReply = () => {

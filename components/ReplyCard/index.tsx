@@ -1,3 +1,3 @@
-import ReplyCard from './ReplyCard';
+import ReplyCard from "./ReplyCard";
 
 export default ReplyCard;

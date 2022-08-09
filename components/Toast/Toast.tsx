@@ -1,12 +1,14 @@
+/* eslint-disable react/require-default-props */
 import React, { useEffect, useState } from "react";
 
-import styles from './Toast.module.scss';
+import styles from "./Toast.module.scss";
 
 interface IToast {
-  message: string,
-  type: 'error' | 'warning' | 'success',
-  isVisible?: boolean,
+  message: string;
+  type: "error" | "warning" | "success";
+  isVisible?: boolean;
 }
+
 const Toast = ({ message, isVisible, type }: IToast) => {
   if (!isVisible) {
     return null;
@@ -27,8 +29,10 @@ const Toast = ({ message, isVisible, type }: IToast) => {
   }
 
   return (
-    <div className={styles.container} onClick={handleDismiss}>
-      <span>{type}: {message}</span>
+    <div onKeyDown={() => {}} tabIndex={0} role="button" className={styles.container} onClick={handleDismiss}>
+      <span>
+        {type}: {message}
+      </span>
     </div>
   );
 };

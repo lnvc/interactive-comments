@@ -1,30 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useEffect, useState } from "react";
+import Head from "next/head";
 // import useSWR from 'swr';
-import { gql, useSubscription } from '@apollo/client';
-import Link from 'next/link';
-import { useSelector, useDispatch } from 'react-redux';
-import { signOut } from 'firebase/auth';
+import { gql, useSubscription } from "@apollo/client";
+import Link from "next/link";
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "firebase/auth";
 
-import { useRouter } from 'next/router';
-import styles from '../styles/Home.module.scss';
+import { useRouter } from "next/router";
+import styles from "../styles/Home.module.scss";
 
-import { logout } from '../libs/redux/features/user/userSlice';
-import { auth } from '../libs/firebase/config';
-import { GET_COMMENTS } from '../libs/gql/queries';
-import { getCommentsAndReplies, gqlFetcher } from '../utils/functions';
-import { client } from '../libs/gql/client';
-import Card from '../components/Card';
-import Layout from '../components/Layout';
-import ReplyCard from '../components/ReplyCard';
-import { COMMENTS_SUBSCRIPTION } from '../libs/gql/subscriptions';
+import { logout } from "../libs/redux/features/user/userSlice";
+import { auth } from "../libs/firebase/config";
+import { GET_COMMENTS } from "../libs/gql/queries";
+import { getCommentsAndReplies } from "../utils/functions";
+import { client } from "../libs/gql/client";
+import Card from "../components/Card";
+import Layout from "../components/Layout";
+import ReplyCard from "../components/ReplyCard";
+import { COMMENTS_SUBSCRIPTION } from "../libs/gql/subscriptions";
 // import { HEADERS } from '../utils/constants';
-import { Comment } from '../utils/interfaces';
+import { Comment } from "../utils/interfaces";
 
 export const getStaticProps = async () => {
   const { error: errorComments, data: dataComments } = await client.query({
-    query: gql`${GET_COMMENTS}`,
-    fetchPolicy: 'network-only',
+    query: gql`
+      ${GET_COMMENTS}
+    `,
+    fetchPolicy: "network-only",
   });
 
   const comments = await getCommentsAndReplies(dataComments);
@@ -52,7 +55,7 @@ export const getStaticProps = async () => {
 // const getData = async (...args: any) => await gqlFetcher(query);
 
 interface IHome {
-  comments: any
+  comments: any;
 }
 
 const Home = ({ comments }: IHome) => {
@@ -75,7 +78,7 @@ const Home = ({ comments }: IHome) => {
     signOut(auth)
       .then(() => {
         dispatch(logout());
-        router.push('/');
+        router.push("/");
       })
       .catch((err) => {
         console.error(err);
@@ -120,25 +123,27 @@ const Home = ({ comments }: IHome) => {
         <link rel="icon" href="/favicon-32x32.png" />
       </Head>
 
-      {
-        loggedInUser ? (
-          <>
-            <span>
-              Hi
-              {' '}
-              <Link href="/profile"><a>{username}</a></Link>
-            </span>
-            <button type="button" onClick={logoutUser}>Logout</button>
-          </>
-        )
-          : <Link href="/login"><a>Login</a></Link>
-      }
+      {loggedInUser ? (
+        <>
+          <span>
+            Hi{" "}
+            <Link href="/profile">
+              <a>{username}</a>
+            </Link>
+          </span>
+          <button type="button" onClick={logoutUser}>
+            Logout
+          </button>
+        </>
+      ) : (
+        <Link href="/login">
+          <a>Login</a>
+        </Link>
+      )}
       <main className={styles.main}>
-        {
-          commentsState?.map((comment: Comment) => (
-            <Card key={comment.id} comment={comment} />
-          ))
-        }
+        {commentsState?.map((comment: Comment) => (
+          <Card key={comment.id} comment={comment} />
+        ))}
         <ReplyCard />
       </main>
     </Layout>

@@ -1,13 +1,12 @@
-import React from 'react';
+import React from "react";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
-import { auth } from '../libs/firebase/config';
-import { login as login, setId, setUsername } from '../libs/redux/features/user/userSlice';
-import { useLazyQuery } from '@apollo/client';
-import { GET_USER } from '../libs/gql/queries';
-import { HEADERS, USER_HEADER } from '../utils/constants';
+import { useLazyQuery } from "@apollo/client";
+import { auth } from "../libs/firebase/config";
+import { login, setId, setUsername } from "../libs/redux/features/user/userSlice";
+import { GET_USER } from "../libs/gql/queries";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -31,21 +30,22 @@ const Login = () => {
           dispatch(setUsername(username));
           dispatch(setId(id));
         }
-        if (process.title === 'browser') {
-          router.push('/');
+        if (process.title === "browser") {
+          router.push("/");
         }
         // ...
-      }).catch((error) => {
+      })
+      .catch(() => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
         // The email of the user's account used.
-        const email = error.customData.email;
+        // const { email } = error.customData;
         // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        // const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
-        if (process.title === 'browser') {
-          router.push('/');
+        if (process.title === "browser") {
+          router.push("/");
         }
       });
   };
@@ -53,7 +53,9 @@ const Login = () => {
   return (
     <div>
       Login
-      <button onClick={loginUser}>Google Login</button>
+      <button type="button" onClick={loginUser}>
+        Google Login
+      </button>
     </div>
   );
 };
