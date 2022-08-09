@@ -7,6 +7,8 @@ yarn create next-app --typescript
 
 ## Configure ESLint
 ```
+yarn add -DE eslint-plugin-import eslint-import-resolver-typescript
+
 npm init @eslint/config
 ```
 
